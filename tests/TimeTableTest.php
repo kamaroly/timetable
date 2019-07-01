@@ -48,6 +48,9 @@ class TimeTableTest extends TestCase
         }
 
         $timeTable = (new TimeTable(new TimeFrame()))->getTimeTable($courses);
+
+        file_put_contents('timetable.txt', json_encode($timeTable));
+
         foreach ($courses as $course) {
             $this->assertTrue($this->inArrayRecursive($course->getCourseName(), $timeTable));
         }
