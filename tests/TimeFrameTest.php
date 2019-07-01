@@ -12,7 +12,7 @@ class TimeFrameTest extends \PHPUnit\Framework\TestCase
     /** @test */
     public function testCanGenerateWeeklyDays()
     {
-        $weekDays = TimeFrame::weekDays();
+        $weekDays = (new TimeFrame())->getTimeTableDays();
 
         $this->assertEquals(7, count($weekDays));
         $this->assertTrue(in_array('monday', $weekDays));
@@ -25,35 +25,34 @@ class TimeFrameTest extends \PHPUnit\Framework\TestCase
     }
 
     /** @test it can geenerate time table daily hours */
-    public function testItCanGenerateTimeTableDailyHours()
+    public function testItCanGenerateTimeTablegetOperationalHours()
     {
-        $startHour = 8;
-        $endHour = 18;
-        $range = ($endHour - $startHour + 1);
-        $allowedHours = TimeFrame::dailyHours($startHour, $endHour);
+        $timeFrame = new TimeFrame();
+        $timeFrame->setStartHour(8);
+        $timeFrame->setEndHour(18);
+        $allowedHours = $timeFrame->getOperationalHours();
 
-        $this->assertEquals($range, count($allowedHours));
-        $this->assertTrue(in_array($startHour, $allowedHours));
-        $this->assertTrue(in_array($endHour, $allowedHours));
+        $this->assertTrue(in_array(8, $allowedHours));
+        $this->assertTrue(in_array(18, $allowedHours));
     }
 
     /** @test throw exception on invalid EndHour */
     public function testItFailsWhenEndHourIsNotValid()
     {
-        $startHour = 8;
-        $endHour = 24;
-        $range = ($endHour - $startHour + 1);
         $this->expectException(InvalidEndHourException::class);
-        $allowedHours = TimeFrame::dailyHours($startHour, $endHour);
+        $timeFrame = new TimeFrame();
+        $timeFrame->setStartHour(8);
+        $timeFrame->setEndHour(24);
+        $allowedHours = $timeFrame->getOperationalHours();
     }
 
     /** @test throw exception on invalid EndHour */
     public function testItFailsWhenStartHourIsNotValid()
     {
-        $startHour = 24;
-        $endHour = 2;
-        $range = ($endHour - $startHour + 1);
         $this->expectException(InvalidStartHourException::class);
-        $allowedHours = TimeFrame::dailyHours($startHour, $endHour);
+        $timeFrame = new TimeFrame();
+        $timeFrame->setStartHour(24);
+        $timeFrame->setEndHour(2);
+        $allowedHours = $timeFrame->getOperationalHours();
     }
 }
