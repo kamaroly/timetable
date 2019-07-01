@@ -2,6 +2,8 @@
 
 namespace Tests;
 
+use Faker\Factory;
+use Kamaro\TimeTable\Course;
 use Kamaro\TimeTable\TimeFrame;
 use Kamaro\TimeTable\TimeTable;
 use PHPUnit\Framework\TestCase;
@@ -20,7 +22,6 @@ class TimeTableTest extends TestCase
         $timeFrame->setEndHour($endHour);
         $unfilledTimeTable = (new TimeTable($timeFrame))->getUnfilledTimeTable();
 
-        var_dump($unfilledTimeTable);
         // Assert that we have all days
         $this->assertEquals(count($timeFrame->getTimeTableDays()), count($unfilledTimeTable));
 
@@ -29,5 +30,37 @@ class TimeTableTest extends TestCase
         foreach ($unfilledTimeTable as $timeTableDay) {
             $this->assertEquals($range, count($timeTableDay));
         }
+    }
+
+    public function testItCanFillTimeTableWithCourses()
+    {
+        $fake = Factory::create();
+        $courses = [];
+        // Generate fake courses
+        for ($i = 0; $i < 10; ++$i) {
+            $course = new Course();
+            $course->setCourseName($fake->name);
+            $course->setTeacherName($fake->name);
+            $course->setMaxHoursPerDay(2);
+            $course->setMaxHoursPerWeek(10);
+
+            $courses[] = $course;
+        }
+
+        $timeTable = (new TimeTable(new TimeFrame()))->getTimeTable($courses);
+        foreach ($courses as $course) {
+            $this->assertTrue($this->inArrayRecursive($course->getCourseName(), $timeTable));
+        }
+    }
+
+    public function inArrayRecursive($needle, $haystack, $strict = false)
+    {
+        foreach ($haystack as $item) {
+            if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && $this->inArrayRecursive($needle, $item, $strict))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
