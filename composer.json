@@ -17,8 +17,7 @@
         }
     ],
     "require": {
-        "php": "~7.1",
-        "nesbot/carbon": "^2.20"
+        "php": "~7.1"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.8",
