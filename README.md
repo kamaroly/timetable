@@ -55,6 +55,7 @@ $ composer require kamaro/timetable
 ```php
     use Kamaro\TimeTable\Course;
     use Kamaro\TimeTable\TimeTable;
+    use Kamaro\TimeTable\TimeFrame;
 
     // Generate fake courses
     $courses = [];
@@ -67,7 +68,10 @@ $ composer require kamaro/timetable
         $courses[] = $course;
     }
     // Generate TimeTable
-    $timeTable = (new TimeTable())->getTimeTable($courses);
+    $timeTable = (new TimeTable(
+                            new TimeFrame() // TimeFrame
+                        )
+                 )->getTimeTable($courses);
 
     echo json_encode($timeTable);
 ```

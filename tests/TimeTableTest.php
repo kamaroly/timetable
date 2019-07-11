@@ -47,7 +47,10 @@ class TimeTableTest extends TestCase
             $courses[] = $course;
         }
 
-        $timeTable = (new TimeTable(new TimeFrame()))->getTimeTable($courses);
+        $timeTable = (new TimeTable(
+                            new TimeFrame() // TimeFrame
+                        )
+                     )->getTimeTable($courses);
 
         foreach ($courses as $course) {
             $this->assertTrue($this->inArrayRecursive($course->getCourseName(), $timeTable));
